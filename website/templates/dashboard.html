@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Chat Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FFD700, #8A2BE2);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            text-align: center;
+            color: white;
+        }
+
+        .dashboard-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .chat-list {
+            padding: 1.5rem;
+        }
+
+        .chat-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .chat-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .chat-item h3 {
+            font-size: 1.2rem;
+            color: #8A2BE2;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-item p {
+            font-size: 0.9rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-item .timestamp {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: right;
+        }
+        .new-chat-input{
+            display: block;
+            width: calc(100% - 3rem);
+            margin: 1.5rem;
+            padding: 1rem;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            outline: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .new-chat-btn {
+            display: block;
+            width: calc(100% - 3rem);
+            margin: 1.5rem;
+            padding: 1rem;
+            background: #FFD700;
+            color: #8A2BE2;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                margin: 1rem;
+                border-radius: 10px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .chat-item {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header class="dashboard-header">
+            <h1>Your Anonymous Rooms</h1>
+            <p>View and share your anonymous rooms</p>
+        </header>
+        <main class="chat-list">
+            {% if USERROOMS %}
+                {% for room in USERROOMS %}
+                    <a href="/room/{{ room['room_name'] }}/{{ room['rid'] }}" target="_blank" style="text-decoration: none;">
+                        <div class="chat-item">
+                            <h3>{{ room['room_name'] }}</h3>
+                            <div class="timestamp">{{ DTK(room['datestamp']) }}</div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <p align="center" style="color: white;">No rooms for now</p>
+            {% endif %}
+        </main>
+        <form method="POST" action="/create-chat-room" style="display: flex; align-items: center; justify-content: center;">
+            <input class="new-chat-input" name="room_name" type="text" placeholder="Room Name">
+            <button type="submit" class="new-chat-btn">Start a New Room</button>
+        </form>
+    </div>
+</body>
+</html>
